@@ -1,32 +1,50 @@
 
 
 #include "PianoGraphics.h"
+#include "Key.h"
 #include <iostream>
 #include <vector>
 using namespace std;
 GLdouble width, height;
 int wd;
+color whiteKeyFill = {1,1,1};
+Key C(whiteKeyFill,{300,100},70,200);
+Key D(whiteKeyFill,{375,100},70,200);
+Key E(whiteKeyFill,{450,100},70,200);
+Key F(whiteKeyFill,{525,100},70,200);
+Key G(whiteKeyFill,{600,100},70,200);
+Key A(whiteKeyFill,{675,100},70,200);
+Key B(whiteKeyFill,{750,100},70,200);
+
 void init() {
-    width = 750;
-    height = 500;
+    width = 900;
+    height = 550;
 }
 
 /* Initialize OpenGL Graphics */
 void initGL() {
     // Set "clearing" or background color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black and opaque
+    glClearColor(0.45f, 0.6f, 1.0f, 1.0f);
 }
 
 /* Handler for window-repaint event. Call back when the window first appears and
  whenever the window needs to be re-painted. */
 void display() {
     // tell OpenGL to use the whole window for drawing
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, 1.6*width, 1.4*height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0.0, width, height, 0.0, -1.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    C.draw();
+    D.draw();
+    E.draw();
+    F.draw();
+    G.draw();
+    A.draw();
+    B.draw();
+
     glFlush();
 
 }
@@ -82,7 +100,7 @@ int main(int argc, char** argv) {
     glutInitWindowSize((int)width, (int)height);
     glutInitWindowPosition(100, 200); // Position the window's initial top-left corner
     /* create the window and store the handle to it */
-    wd = glutCreateWindow("Virtual Piano!");
+    wd = glutCreateWindow("Virtual Piano");
 
     // Register callback handler for window re-paint event
     glutDisplayFunc(display);
