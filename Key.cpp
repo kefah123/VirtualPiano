@@ -4,7 +4,7 @@
 
 Key::Key(color fill, point center, unsigned int width, unsigned int height) : Quad(fill, center, width, height) {
     this->fill = fill;
-    pressFill = {fill.red - 0.5, fill.green - 0.5, fill.blue - 0.5};
+    pressFill = {0.5, 0.5, 0.5};
 }
 
 void Key::draw() const {

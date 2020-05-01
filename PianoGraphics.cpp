@@ -1,13 +1,16 @@
 
-
+#include <irrKlang.h>
 #include "PianoGraphics.h"
 #include "Key.h"
 #include <iostream>
-#include <vector>
+
 using namespace std;
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib") // link with irrKlang.dll
 GLdouble width, height;
 int wd;
 color whiteKeyFill = {1,1,1};
+color blackKeyFill = {0,0,0};
 Key C(whiteKeyFill,{300,100},70,200);
 Key D(whiteKeyFill,{375,100},70,200);
 Key E(whiteKeyFill,{450,100},70,200);
@@ -15,7 +18,13 @@ Key F(whiteKeyFill,{525,100},70,200);
 Key G(whiteKeyFill,{600,100},70,200);
 Key A(whiteKeyFill,{675,100},70,200);
 Key B(whiteKeyFill,{750,100},70,200);
-
+Key cSharp(blackKeyFill,{337,50},35,130);
+Key dSharp(blackKeyFill,{412,50},35,130);
+Key fSharp(blackKeyFill,{562,50},35,130);
+Key gSharp(blackKeyFill,{637,50},35,130);
+Key aSharp(blackKeyFill,{712,50},35,130);
+Quad pianoBase(blackKeyFill,{525,100},600,300);
+ISoundEngine* engine = createIrrKlangDevice();
 void init() {
     width = 900;
     height = 550;
@@ -25,6 +34,8 @@ void init() {
 void initGL() {
     // Set "clearing" or background color
     glClearColor(0.45f, 0.6f, 1.0f, 1.0f);
+    glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
+
 }
 
 /* Handler for window-repaint event. Call back when the window first appears and
@@ -37,6 +48,7 @@ void display() {
     glOrtho(0.0, width, height, 0.0, -1.f, 1.f);
     glClear(GL_COLOR_BUFFER_BIT);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    pianoBase.draw();
     C.draw();
     D.draw();
     E.draw();
@@ -44,20 +56,90 @@ void display() {
     G.draw();
     A.draw();
     B.draw();
+    cSharp.draw();
+    dSharp.draw();
+    fSharp.draw();
+    gSharp.draw();
+    aSharp.draw();
 
     glFlush();
 
 }
 
-void kbd(unsigned char key, int x, int y)
-{
-    // escape
-    if (key == 27) {
-        glutDestroyWindow(wd);
-        exit(0);
-    }
 
+void keyButtonDown(unsigned char key, int x, int y)
+{
+    switch (key) {
+        case 27:
+            glutDestroyWindow(wd);
+            exit(0);
+        case 'd':
+            C.pressDown();
+            engine->play2D("piano_sounds/448549__tedagame__c4.ogg",false);
+            break;
+        case 'f':
+            D.pressDown();
+            break;
+        case 'g':
+            E.pressDown();
+            break;
+        case 'h':
+            F.pressDown();
+            break;
+        case 'j':
+            G.pressDown();
+            break;
+        case 'k':
+            A.pressDown();
+            break;
+        case 'l':
+            B.pressDown();
+            break;
+        case 'r':
+            cSharp.pressDown();
+            break;
+        case 't':
+            dSharp.pressDown();
+            break;
+        case 'y':
+            fSharp.pressDown();
+            break;
+        case 'u':
+            gSharp.pressDown();
+            break;
+        case 'i':
+            aSharp.pressDown();
+            break;
+    }
     glutPostRedisplay();
+}
+void keyButtonUp(unsigned char key, int x, int y) {
+    switch(key) {
+        case 'd':
+            C.release();
+        case 'f':
+            D.release();
+        case 'g':
+            E.release();
+        case 'h':
+            F.release();
+        case 'j':
+            G.release();
+        case 'k':
+            A.release();
+        case 'l':
+            B.release();
+        case 'r':
+            cSharp.release();
+        case 't':
+            dSharp.release();
+        case 'y':
+            fSharp.release();
+        case 'u':
+            gSharp.release();
+        case 'i':
+            aSharp.release();
+    }
 }
 
 void kbdS(int key, int x, int y) {
@@ -109,9 +191,10 @@ int main(int argc, char** argv) {
     initGL();
 
     // register keyboard press event processing function
-    // works for numbers, letters, spacebar, etc.
-    glutKeyboardFunc(kbd);
+    glutKeyboardFunc(keyButtonDown);
 
+    //register keyboard release event
+    glutKeyboardUpFunc(keyButtonUp);
     // register special event: function keys, arrows, etc.
     glutSpecialFunc(kbdS);
 

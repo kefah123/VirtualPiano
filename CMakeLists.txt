@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
 project(KE-Final-Project-Graphics)
-
 if (WIN32)
     set(FREEGLUT_INCLUDE_DIRS "C:/Program\ Files/Common\ Files/freeglut/include")
     set(FREEGLUT_LIBRARY_DIRS "C:/Program\ Files/Common\ Files/freeglut/lib")
@@ -23,15 +22,19 @@ elseif (APPLE)
     include_directories(${OPENGL_INCLUDE_DIR}  ${GLUT_INCLUDE_DIRS})
 endif ()
 
+include_directories(irrklang/include)
+include_directories(${CMAKE_SOURCE_DIR}/irrklang)
+
 file(GLOB SOURCE_FILES
         *.cpp
         *.h
         )
 
-add_executable(graphics ${SOURCE_FILES} Quad.cpp Quad.h)
+add_executable(graphics ${SOURCE_FILES} Quad.cpp Quad.h Key.cpp Key.h)
 
 if (WIN32)
     target_link_libraries (graphics ${OPENGL_LIBRARIES} freeglut)
 elseif (APPLE)
-    target_link_libraries (graphics ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES})
+    target_link_libraries (graphics ${OPENGL_LIBRARIES} ${GLUT_LIBRARIES} )
 endif ()
+
